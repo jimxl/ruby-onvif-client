@@ -26,11 +26,14 @@ module ONVIF
                 http_options).post(request_options)
             http.errback { yield false, {} }
             http.callback do
-                yield true, {
-                    status: http.response_header.status,
-                    header: http.response_header,
-                    content: Nokogiri::XML(http.response)
-                }
+                if http.response_header.status != 400
+                    yield false, {}
+                else
+                    yield true, {
+                        header: http.response_header,
+                        content: Nokogiri::XML(http.response)
+                    }
+                end
             end
         end
     end
