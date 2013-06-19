@@ -1,0 +1,45 @@
+GIT
+  remote: git@github.com:jimxl/ws-discovery.git
+  revision: 1743c2d7a6c7136478fe901a3f58d21a8679b32d
+  specs:
+    ws_discovery (0.0.2)
+      builder
+      eventmachine
+      log_switch (>= 0.1.4)
+      nokogiri
+      nori (>= 2.0.0)
+      uuid
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    addressable (2.3.4)
+    builder (3.2.2)
+    cookiejar (0.3.0)
+    em-http-request (1.0.3)
+      addressable (>= 2.2.3)
+      cookiejar
+      em-socksify
+      eventmachine (>= 1.0.0.beta.4)
+      http_parser.rb (>= 0.5.3)
+    em-socksify (0.3.0)
+      eventmachine (>= 1.0.0.beta.4)
+    eventmachine (1.0.3)
+    http_parser.rb (0.5.3)
+    log_switch (0.4.0)
+    macaddr (1.6.1)
+      systemu (~> 2.5.0)
+    mini_portile (0.5.0)
+    nokogiri (1.6.0)
+      mini_portile (~> 0.5.0)
+    nori (2.2.0)
+    systemu (2.5.2)
+    uuid (2.3.7)
+      macaddr (~> 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  em-http-request
+  ws_discovery!
