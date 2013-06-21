@@ -3,9 +3,9 @@ require "active_support/all"
 
 module ONVIF
     class Service
-        def initialize
+        def initialize address
             @client = ONVIF::Client.new(
-                address: onvif_service_address
+                address: address
             )
         end
 

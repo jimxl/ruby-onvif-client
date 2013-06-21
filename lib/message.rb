@@ -9,7 +9,7 @@ module ONVIF
         def initialize options = {}
             @options = {
                 username: 'admin',
-                password: 'passowrd',
+                password: 'admin',
                 namespaces: {}
             }.merge(options)
 

@@ -19,7 +19,7 @@ module ONVIF
                             serial_number: xml_doc.at('Body SerialNumber').content,
                             hardware_id: xml_doc.at('Body HardwareId').content,
                         }
-                        callback cb, success, info
+                        callback cb, info, info
                     else
                         callback cb, success, result
                     end

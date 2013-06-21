@@ -1,12 +1,4 @@
 GIT
-  remote: git@github.com:jimxl/akami.git
-  revision: 85d6bd1b366c1546a19ce91be63e3b2a137dc285
-  specs:
-    akami (1.2.1)
-      gyoku (>= 0.4.0)
-      nokogiri (>= 1.4.0)
-
-GIT
   remote: git@github.com:jimxl/ws-discovery.git
   revision: 1743c2d7a6c7136478fe901a3f58d21a8679b32d
   specs:
@@ -25,6 +17,9 @@ GEM
       activesupport (= 3.0.0)
     activesupport (3.0.0)
     addressable (2.3.4)
+    akami (1.2.0)
+      gyoku (>= 0.4.0)
+      nokogiri (>= 1.4.0)
     builder (3.2.2)
     cookiejar (0.3.0)
     em-http-request (1.0.3)
@@ -56,7 +51,7 @@ PLATFORMS
 
 DEPENDENCIES
   active_support
-  akami!
+  akami
   em-http-request
   i18n
   ws_discovery!
