@@ -11,7 +11,6 @@ module ONVIF
 
         def method_missing(m, *args, &blcok)
             action_class = ONVIF.const_get(%Q{#{self.class.name}Action}).const_get(m.to_s.camelize) rescue nil
-            puts m.inspect
             unless action_class.nil?
                 #self.class.send :define_method, m,  -> {
                     #action_class.new(@client).run(*args)
