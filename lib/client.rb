@@ -1,5 +1,6 @@
 require "em-http"
 require "nokogiri"
+require "nori"
 
 module ONVIF
     class Client
@@ -24,12 +25,13 @@ module ONVIF
             puts http.inspect
             http.errback { yield false, {} }
             http.callback do
-                if http.response_header.status != 400
+                if http.response_header.status != 200
                     yield false, {header: http.response_header}
                 else
+                    nori = Nori.new(:strip_namespaces => true)
                     yield true, {
                         header: http.response_header,
-                        content: Nokogiri::XML(http.response)
+                        content: nori.parse(http.response)
                     }
                 end
             end

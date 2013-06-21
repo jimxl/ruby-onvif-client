@@ -10,16 +10,14 @@ module ONVIF
                 end
                 send_message message do |success, result|
                     if success
-                        xml_doc = result[:content]
-                        puts xml_doc.at('SOAP-ENV|Body')
-                        info = {
-                            mf: xml_doc.at('Body Manufacturer').content,
-                            model: xml_doc.at('Body Model').content,
-                            firmware_version: xml_doc.at('Body FirmwareVersion').content,
-                            serial_number: xml_doc.at('Body SerialNumber').content,
-                            hardware_id: xml_doc.at('Body HardwareId').content,
-                        }
-                        callback cb, info, info
+                        #info = {
+                            #mf: value(xml_doc, 'Body Manufacturer'),
+                            #model: value(xml_doc, 'Body Model'),
+                            #firmware_version: value(xml_doc, 'Body FirmwareVersion'),
+                            #serial_number: value(xml_doc, 'Body SerialNumber'),
+                            #hardware_id: value(xml_doc, 'Body HardwareId')
+                        #}
+                        callback cb, success, result
                     else
                         callback cb, success, result
                     end
