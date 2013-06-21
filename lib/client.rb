@@ -12,6 +12,7 @@ module ONVIF
         end
 
         def send data
+            puts "send data to #{@options[:address]} ", data 
             http_options = {
                 connect_timeout: @options[:connect_timeout]
             }
@@ -23,11 +24,12 @@ module ONVIF
             }
             http = EventMachine::HttpRequest.new(
                 @options[:address], 
-                http_options).post(request_options)
+                http_options
+            ).post(request_options)
             http.errback { yield false, {} }
             http.callback do
                 if http.response_header.status != 400
-                    yield false, {}
+                    yield false, {header: http.response_header}
                 else
                     yield true, {
                         header: http.response_header,
