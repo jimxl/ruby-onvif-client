@@ -16,5 +16,11 @@ module ONVIF
             return if cb.class != Proc
             cb.call *args
         end
+
+        def value xml_doc, xpath
+            node = xml_doc.at_xpath(xpath)
+            return node.content unless node.nil?
+            ''
+        end
     end
 end

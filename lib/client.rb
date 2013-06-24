@@ -22,16 +22,19 @@ module ONVIF
                 @options[:address], 
                 http_options
             ).post(request_options)
-            puts http.inspect
             http.errback { yield false, {} }
             http.callback do
+                puts "========================="
+                puts "receive message =>", http.response
+                puts "========================="
                 if http.response_header.status != 200
                     yield false, {header: http.response_header}
                 else
-                    nori = Nori.new(:strip_namespaces => true)
+                    #nori = Nori.new(:strip_namespaces => true)
                     yield true, {
                         header: http.response_header,
-                        content: nori.parse(http.response)
+                        #content: nori.parse(http.response)
+                        content: http.response
                     }
                 end
             end
