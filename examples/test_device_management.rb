@@ -6,5 +6,8 @@ EM.run do
     device_management.get_device_information ->(success, result) {
         puts result
     }
+    device_management.get_users ->(success, result) {
+        puts result
+    }
 end
 
