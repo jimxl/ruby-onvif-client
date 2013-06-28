@@ -1,5 +1,5 @@
 GIT
-  remote: git@github.com:jimxl/ws-discovery.git
+  remote: https://github.com/jimxl/ws-discovery.git
   revision: 1743c2d7a6c7136478fe901a3f58d21a8679b32d
   specs:
     ws_discovery (0.0.2)
