@@ -5,16 +5,16 @@ module ONVIF
         class SystemReboot < Action
             def run cb
                 message = Message.new
-                message.body =  ->(xml) do
+                message.body = ->(xml) do
                     xml.wsdl(:SystemReboot)
                 end
                 send_message message do |success, result|
                     if success
                         xml_doc = Nokogiri::XML(result[:content])
-                        message = {
+                        msg = {
                             msg: value(xml_doc, '//tds:Message')
                         }
-                        callback cb, success, message
+                        callback cb, success, msg
                     else
                         callback cb, success, result
                     end
