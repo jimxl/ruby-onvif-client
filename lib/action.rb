@@ -22,5 +22,10 @@ module ONVIF
             return node.content unless node.nil?
             ''
         end
+        def attribute xml_doc, xpath
+            node = xml_doc[xpath]
+            return node unless node.nil?
+            ''
+        end
     end
 end
