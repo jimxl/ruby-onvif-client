@@ -14,7 +14,6 @@ Gem::Specification.new do |s|
     s.add_dependency 'em_ws_discovery'
     s.add_dependency 'em-http-request'
     s.add_dependency 'activesupport'
-    s.add_dependency 'i18n'
     s.add_dependency 'akami'
 end
 
