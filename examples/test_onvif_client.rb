@@ -1,4 +1,4 @@
-require_relative "../lib/client"
+require_relative "../lib/ruby_onvif_client"
 
 EM.run do
     client = ONVIF::Client.new({

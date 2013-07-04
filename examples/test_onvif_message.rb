@@ -1,4 +1,4 @@
-require_relative "../lib/message"
+require_relative "../lib/ruby_onvif_client"
 
 message = ONVIF::Message.new
 message.body =  ->(xml) do

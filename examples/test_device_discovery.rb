@@ -1,4 +1,4 @@
-require_relative "../lib/device_discovery"
+require_relative "../lib/ruby_onvif_client"
 
 EM.run do
     ONVIF::DeviceDiscovery.start do |device|
