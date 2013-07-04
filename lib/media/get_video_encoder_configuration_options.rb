@@ -26,23 +26,26 @@ module ONVIF
                                 frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:JPEG"), "//tt:FrameRateRange"),
                                 rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:JPEG"), "//tt:FrameRateRange")
                             },
-                            mpeg4: {
+                            extension: ""
+                        }
+                        unless xml_doc.at_xpath('//tt:MPEG4').nil?
+                            options["mpeg4"] = {
                                 resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:MPEG4"), "//tt:ResolutionsAvailable"),
                                 gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:GovLengthRange"),
                                 frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:FrameRateRange"),
                                 rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:EncodingIntervalRange"),
                                 mpeg4_profiles_supported: _get_profiles_supported(_get_node(xml_doc, "//tt:MPEG4"), "//tt:Mpeg4ProfilesSupported")
-                            },
-                            h264: {
-                                resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:h264"), "//tt:ResolutionsAvailable"),
-                                gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:GovLengthRange"),
-                                frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:FrameRateRange"),
-                                rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:EncodingIntervalRange"),
-                                h264_profiles_supported: _get_profiles_supported(_get_node(xml_doc, "//tt:h264"), "//tt:H264ProfilesSupported")
-                            },
-                            extension: ""
-                        }
-                        
+                            }
+                        end
+                        unless xml_doc.at_xpath('//tt:H264').nil?
+                            options["h264"] = {
+                                resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:H264"), "//tt:ResolutionsAvailable"),
+                                gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:H264"), "//tt:GovLengthRange"),
+                                frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:H264"), "//tt:FrameRateRange"),
+                                rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:H264"), "//tt:EncodingIntervalRange"),
+                                h264_profiles_supported: _get_profiles_supported(_get_node(xml_doc, "//tt:H264"), "//tt:H264ProfilesSupported")
+                            }
+                        end
                         callback cb, success, options
                     else
                         callback cb, success, result
