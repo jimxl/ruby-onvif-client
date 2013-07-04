@@ -7,7 +7,7 @@ module ONVIF
             #   c_token //[ReferenceToken]   Token of the requested audio encoder configuration.
             # 
             def run c_token, cb
-                message = Message.new
+                message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetAudioEncoderConfiguration) do
                         xml.wsdl :ConfigurationToken, c_token

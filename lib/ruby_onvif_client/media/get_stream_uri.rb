@@ -17,7 +17,7 @@ module ONVIF
             #    profile_token: "xxxxxxx" // [ReferenceToken]
             # }
             def run options, cb
-                message = Message.new namespaces: {:'xmlns:sch' => 'http://www.onvif.org/ver10/schema'}
+                message = create_media_onvif_message namespaces: {:'xmlns:sch' => 'http://www.onvif.org/ver10/schema'}
                 message.body =  ->(xml) do
                     xml.wsdl(:GetStreamUri) do
                         xml.wsdl(:StreamSetup) do

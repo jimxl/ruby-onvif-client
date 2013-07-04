@@ -9,7 +9,7 @@ module ONVIF
             #   p_token: "xxxxxxx"  //[ReferenceToken]  Optional ProfileToken that specifies an existing media profile that the options shall be compatible with.
             # }
             def run options, cb
-                message = Message.new
+                message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetAudioEncoderConfigurationOptions) do
                         xml.wsdl :ConfigurationToken, options["c_token"]

@@ -4,7 +4,7 @@ module ONVIF
     module MediaAction
         class GetVideoSourceConfigurations < Action
             def run cb
-                message = Message.new
+                message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetVideoSourceConfigurations)
                 end

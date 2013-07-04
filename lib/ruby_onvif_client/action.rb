@@ -27,5 +27,13 @@ module ONVIF
             return node unless node.nil?
             ''
         end
+
+        def create_media_onvif_message options = {}
+            namespaces = {
+                :'xmlns:wsdl' => "http://www.onvif.org/ver10/media/wsdl"
+            }.merge(options[:namespaces] || {})
+            options[:namespaces] = namespaces
+            Message.new options
+        end
     end
 end

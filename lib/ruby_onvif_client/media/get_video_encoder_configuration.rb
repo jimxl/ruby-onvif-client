@@ -5,7 +5,7 @@ module ONVIF
         class GetVideoEncoderConfiguration < Action
             # c_token 的结构  // [ReferenceToken]  Token of the requested video encoder configuration.
             def run c_token, cb
-                message = Message.new
+                message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetVideoEncoderConfiguration) do
                         xml.wsdl :ConfigurationToken, c_token
