@@ -1,12 +1,13 @@
 Gem::Specification.new do |s|
-    s.name        = 'ruby-onvif-client'
+    s.name        = 'ruby_onvif_client'
     s.version     = '0.0.1'
-    s.date        = '2013-07-02'
+    s.date        = '2013-07-04'
     s.summary     = "Ruby实现的onvif客户端"
     s.description = "使用ruby实现的简单的onvif客户端"
     s.authors     = ["jimxl"]
     s.email       = 'tianxiaxl@gmail.com'
     s.require_paths = ['lib']
+    s.files = Dir.glob("lib/**/*") + %w{Gemfile ruby-onvif-client.gemspec}
     s.homepage    = 'http://dreamcoder.info'
 
     s.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
