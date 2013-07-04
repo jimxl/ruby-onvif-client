@@ -16,23 +16,35 @@ module ONVIF
                 send_message message do |success, result|
                     if success
                         xml_doc = Nokogiri::XML(result[:content])
-                        bounds = xml_doc.at_xpath('//tt:Bounds')
-                        success_result = {
-                            configuration: {
-                                name: value(xml_doc, '//tt:name'),
-                                use_count: value(xml_doc, '//tt:UseCount'),
-                                token: attribute(xml_doc, 'token'),
-                                source_token: value(xml_doc, '//tt:SourceToken'),
-                                bounds: {
-                                    x: attribute(bounds, "x"),
-                                    y: attribute(bounds, "y"),
-                                    width: attribute(bounds, "width"),
-                                    height: attribute(bounds, "height")
+                        xml_doc = Nokogiri::XML(result[:content])
+                        configurations = []
+                        xml_doc.xpath('//trt:Configurations').each do |node|
+                            bounds = node.xpath('tt:Bounds')
+                            multicast = node.xpath('tt:Multicast')
+                            address = multicast.xpath('tt:Address')
+                            configuration = {
+                                name: value(node, 'tt:Name'),
+                                use_count: value(node, 'tt:UseCount'),
+                                token: attribute(node, 'token'),
+                                encoding: value(node, 'tt:Encoding'),
+                                bitrate: value(node, 'tt:Bitrate'),
+                                sample_rate: value(node, 'tt:SampleRate'),
+                                
+                                multicast: {
+                                    address: {
+                                        type: value(address, 'tt:Type'),
+                                        ipv4_address: value(address, 'tt:IPv4Address'),
+                                        ipv6_address: value(address, 'tt:IPv6Address')
+                                    },
+                                    port: value(multicast, "tt:Port"),
+                                    ttl: value(multicast, "tt:TTL"),
+                                    auto_start: value(multicast, "tt:AutoStart")
                                 },
-                                extension: ""
+                                session_timeout: value(node, 'tt:SessionTimeout')
                             }
-                        }
-                        callback cb, success, success_result
+                            configurations << configuration
+                        end
+                        callback cb, success, configurations
                     else
                         callback cb, success, result
                     end

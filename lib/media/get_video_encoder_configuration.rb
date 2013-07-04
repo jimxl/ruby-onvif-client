@@ -14,31 +14,45 @@ module ONVIF
                 send_message message do |success, result|
                     if success
                         xml_doc = Nokogiri::XML(result[:content])
-                        options = {
-                            quality_range: _get_min_max(_get_node(xml_doc, "//tt:QualityRange")),
-                            jpeg: {
-                                resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:JPEG"), "//tt:ResolutionsAvailable"),
-                                frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:JPEG"), "//tt:FrameRateRange"),
-                                rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:JPEG"), "//tt:FrameRateRange")
+                        cfr = xml_doc.at_xpath("//trt:Configuration")
+                        rcl = xml_doc.at_xpath("//tt:RateControl")
+                        configuration = {
+                            name: value(xml_doc, "//tt:Name"),
+                            use_count: value(xml_doc, "//tt:UseCount"),
+                            token: attribute(cfr,"token"),
+                            encoding: value(xml_doc, "//tt:Encoding"),
+                            resolution: {
+                                width: value(_get_node(xml_doc, "//tt:Resolution"), "//tt:Width"),
+                                height: value(_get_node(xml_doc, "//tt:Resolution"), "//tt:Height")
+                            },
+                            quality: value(xml_doc, "//tt:Quality"),
+                            rateControl: {
+                                frame_rate_limit: value(rcl, "tt:FrameRateLimit"),
+                                encoding_interval: value(rcl, "tt:EncodingInterval"),
+                                bitrate_limit: value(rcl, "tt:BitrateLimit")
                             },
                             mpeg4: {
-                                resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:MPEG4"), "//tt:ResolutionsAvailable"),
-                                gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:GovLengthRange"),
-                                frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:FrameRateRange"),
-                                rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:EncodingIntervalRange"),
-                                mpeg4_profiles_supported: _get_profiles_supported(_get_node(xml_doc, "//tt:MPEG4"), "//tt:Mpeg4ProfilesSupported")
+                                gov_length: value(_get_node(xml_doc, "//tt:MPEG4"), "//tt:GovLength"),
+                                mpeg4_profile: value(_get_node(xml_doc, "//tt:MPEG4"), "//tt:Mpeg4Profile")
                             },
                             h264: {
-                                resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:h264"), "//tt:ResolutionsAvailable"),
-                                gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:GovLengthRange"),
-                                frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:FrameRateRange"),
-                                rncoding_interval_range: _get_min_max(_get_node(xml_doc, "//tt:h264"), "//tt:EncodingIntervalRange"),
-                                h264_profiles_supported: _get_profiles_supported(_get_node(xml_doc, "//tt:h264"), "//tt:H264ProfilesSupported")
+                                gov_length: value(_get_node(xml_doc, "//tt:H264"), "//tt:GovLength"),
+                                h264_profile: value(_get_node(xml_doc, "//tt:H264"), "//tt:H264Profile")
                             },
-                            extension: ""
+                            multicast: {
+                                address: {
+                                    type: value(_get_node(xml_doc, "//tt:Multicast//tt:Address"), '//tt:Type'),
+                                    ipv4_address: value(_get_node(xml_doc, "//tt:Multicast//tt:Address"), '//tt:IPv4Address'),
+                                    ipv6_address: value(_get_node(xml_doc, "//tt:Multicast//tt:Address"), '//tt:IPv6Address')
+                                },
+                                port: value(_get_node(xml_doc, "//tt:Multicast"), "tt:Port"),
+                                ttl: value(_get_node(xml_doc, "//tt:Multicast"), "tt:TTL"),
+                                auto_start: value(_get_node(xml_doc, "//tt:Multicast"), "tt:AutoStart")
+                            },
+                            session_timeout: value(xml_doc, "//tt:SessionTimeout")
                         }
                         
-                        callback cb, success, options
+                        callback cb, success, configuration
                     else
                         callback cb, success, result
                     end
