@@ -32,13 +32,13 @@ module ONVIF
                                 session_timeout: value(root_node, "tt:SessionTimeout")
                             }
                             unless root_node.at_xpath('//tt:MPEG4').nil?
-                                success_result["MPEG4"] = {
+                                success_result[:MPEG4] = {
                                     gov_length:  value(_get_node(root_node, "tt:MPEG4"), "tt:GovLength"),
                                     mpeg4_profile:  value(_get_node(root_node, "tt:MPEG4"), "tt:Mpeg4Profile")
                                 }
                             end
                             unless root_node.at_xpath('//tt:H264').nil?
-                                success_result["H264"] = {
+                                success_result[:H264] = {
                                     gov_length:  value(_get_node(root_node, "tt:H264"), "tt:GovLength"),
                                     h264_profile:  value(_get_node(root_node, "tt:H264"), "tt:H264Profile")
                                 }

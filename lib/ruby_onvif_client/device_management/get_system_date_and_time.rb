@@ -47,8 +47,8 @@ module ONVIF
                         }
                         xml_utc_time = xml_doc.at_xpath('//tt:UTCDateTime')
                         xml_local_time = xml_doc.at_xpath('//tt:LocalDateTime')
-                        date_time["utc_date_time"] = utc_data_time unless xml_utc_time.nil?
-                        date_time["local_date_time"] = local_date_time unl unless xml_local_time.nil?
+                        date_time[:utc_date_time] = utc_data_time unless xml_utc_time.nil?
+                        date_time[:local_date_time] = local_date_time unl unless xml_local_time.nil?
                         callback cb, success, date_time
                     else
                         callback cb, success, result

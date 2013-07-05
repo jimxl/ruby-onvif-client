@@ -19,21 +19,21 @@ module ONVIF
                 message = Message.new namespaces: {:'xmlns:sch' => 'http://www.onvif.org/ver10/schema'}
                 message.body =  ->(xml) do
                     xml.wsdl(:SetSystemDateAndTime) do
-                        xml.wsdl :DateTimeType, system_date_time["type"]
-                        xml.wsdl :DaylightSavings, system_date_time["ds"]
+                        xml.wsdl :DateTimeType, system_date_time[:type]
+                        xml.wsdl :DaylightSavings, system_date_time[:ds]
                         xml.wsdl(:TimeZone) do
-                            xml.sch :TZ, system_date_time["time_zone_tz"]
+                            xml.sch :TZ, system_date_time[:time_zone_tz]
                         end
                         xml.wsdl(:TimeZone) do
                             xml.sch :Time do
-                                xml.sch :Hour, system_date_time["hour"]
-                                xml.sch :Minute, system_date_time["minute"]
-                                xml.sch :Second, system_date_time["second"]
+                                xml.sch :Hour, system_date_time[:hour]
+                                xml.sch :Minute, system_date_time[:minute]
+                                xml.sch :Second, system_date_time[:second]
                             end
                             xml.sch :Date do
-                                xml.sch :Year, system_date_time["year"]
-                                xml.sch :Month, system_date_time["month"]
-                                xml.sch :Day, system_date_time["day"]
+                                xml.sch :Year, system_date_time[:year]
+                                xml.sch :Month, system_date_time[:month]
+                                xml.sch :Day, system_date_time[:day]
                             end
                         end
                     end

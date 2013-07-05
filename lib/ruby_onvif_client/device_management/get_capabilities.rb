@@ -14,7 +14,7 @@ module ONVIF
                     xml.wsdl(:GetCapabilities) do
                         unless options.nil?
                             options.each do |option|
-                                xml.wsdl :Category, option["Category"]
+                                xml.wsdl :Category, option[:Category]
                             end
                         end
                     end
@@ -29,12 +29,12 @@ module ONVIF
                         xml_media = xml_doc.xpath('//tt:Media')
                         xml_ptz = xml_doc.xpath('//tt:PTZ')
                         success_result = {}
-                        success_result["analytics"] = _get_analytics(xml_analytics) unless xml_analytics.nil?
-                        success_result["device"] = _get_device(xml_device) unless xml_device.nil?
-                        success_result["events"] = _get_events(xml_events) unless xml_events.nil?
-                        success_result["imaging"] = _get_imaging(xml_imaging) unless xml_imaging.nil?
-                        success_result["media"] = _get_media(xml_media) unless xml_media.nil?
-                        success_result["ptz"] = _get_ptz(xml_ptz) unless xml_ptz.nil?
+                        success_result[:analytics] = _get_analytics(xml_analytics) unless xml_analytics.nil?
+                        success_result[:device] = _get_device(xml_device) unless xml_device.nil?
+                        success_result[:events] = _get_events(xml_events) unless xml_events.nil?
+                        success_result[:imaging] = _get_imaging(xml_imaging) unless xml_imaging.nil?
+                        success_result[:media] = _get_media(xml_media) unless xml_media.nil?
+                        success_result[:ptz] = _get_ptz(xml_ptz) unless xml_ptz.nil?
                         callback cb, success, success_result
                     else
                         callback cb, success, result
@@ -51,13 +51,13 @@ module ONVIF
             end
 
             def _get_device xml_device
-                network_keys = ["IPFilter", "ZeroConfiguration", "IPVersion6", "DynDNS", "Dot11Configuration", 
-                    "Dot1XConfigurations", "HostnameFromDHCP", "NTP", "DHCPv6"]
-                system_keys = ["DiscoveryResolve", "DiscoveryBye", "RemoteDiscovery", "SystemBackup", "SystemLogging",
-                    "FirmwareUpgrade", "HttpFirmwareUpgrade", "HttpSystemBackup", "HttpSystemLogging", "HttpSupportInformation"]
-                security_keys = ["TLS1.0", "TLS1.1", "TLS1.2", "OnboardKeyGeneration", "AccessPolicyConfig", 
+                network_keys = [:IPFilter", "ZeroConfiguration", "IPVersion6", "DynDNS", "Dot11Configuration", 
+                    "Dot1XConfigurations", "HostnameFromDHCP", "NTP", "DHCPv6]
+                system_keys = [:DiscoveryResolve", "DiscoveryBye", "RemoteDiscovery", "SystemBackup", "SystemLogging",
+                    "FirmwareUpgrade", "HttpFirmwareUpgrade", "HttpSystemBackup", "HttpSystemLogging", "HttpSupportInformation]
+                security_keys = [:TLS1.0", "TLS1.1", "TLS1.2", "OnboardKeyGeneration", "AccessPolicyConfig", 
                     "DefaultAccessPolicy", "Dot1X", "RemoteUserHandling", "X.509Token", "SAMLToken", "KerberosToken", 
-                    "UsernameToken", "HttpDigest", "RELToken", "SupportedEAPMethods"]
+                    "UsernameToken", "HttpDigest", "RELToken", "SupportedEAPMethods]
                 network = {}; system = {}; security = {}
                 network_keys.each do |key|
                     network[key.underscore] = value(xml_device, '//tt:' + key) unless value(xml_device, '//tt:' + key) == ''

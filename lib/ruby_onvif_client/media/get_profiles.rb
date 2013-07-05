@@ -26,13 +26,13 @@ module ONVIF
                                 fixed: attribute(root_node, "fixed"),
                                 extension: ""
                             }
-                            success_result["video_source_configuration"] = _get_video_source_configuration(video_source) unless video_source.nil?
-                            success_result["audio_source_configuration"] = _get_audio_source_configuration(audio_source) unless audio_source.nil?
-                            success_result["video_encoder_configuration"] = _get_video_encoder_configuration(video_encoder) unless video_encoder.nil?
-                            success_result["audio_encoder_configuration"] = _get_audio_encoder_configuration(audio_encoder) unless audio_encoder.nil?
-                            success_result["video_analytics_configuration"] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
-                            success_result["ptz_configuration"] = _get_ptz_configuration(ptz) unless ptz.nil?
-                            success_result["metadata_configuration"] = _get_metadata_configuration(metadata) unless metadata.nil?
+                            success_result[:video_source_configuration] = _get_video_source_configuration(video_source) unless video_source.nil?
+                            success_result[:audio_source_configuration] = _get_audio_source_configuration(audio_source) unless audio_source.nil?
+                            success_result[:video_encoder_configuration] = _get_video_encoder_configuration(video_encoder) unless video_encoder.nil?
+                            success_result[:audio_encoder_configuration] = _get_audio_encoder_configuration(audio_encoder) unless audio_encoder.nil?
+                            success_result[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
+                            success_result[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
+                            success_result[:metadata_configuration] = _get_metadata_configuration(metadata) unless metadata.nil?
                             profiles << success_result
                         end
                         callback cb, success, profiles
@@ -74,9 +74,9 @@ module ONVIF
 
             def _get_video_source_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["source_token"] = value(parent_node, "tt:SourceToken")
+                configuration[:source_token] = value(parent_node, "tt:SourceToken")
                 bounds = parent_node.at_xpath("tt:Bounds")
-                configuration["bounds"] = {
+                configuration[:bounds] = {
                     x: attribute(bounds, "x"),
                     y: attribute(bounds, "y"),
                     width: attribute(bounds, "width"),
@@ -87,47 +87,47 @@ module ONVIF
 
             def _get_audio_source_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["source_token"] = value(parent_node, "tt:SourceToken")
+                configuration[:source_token] = value(parent_node, "tt:SourceToken")
                 return configuration
             end
 
             def _get_video_encoder_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["encoding"] = value(parent_node, "tt:Encoding")
-                configuration["resolution"] = {
+                configuration[:encoding] = value(parent_node, "tt:Encoding")
+                configuration[:resolution] = {
                     width: value(_get_node(parent_node, "tt:Resolution"), "tt:Width"),
                     height: value(_get_node(parent_node, "tt:Resolution"), "tt:Height")
                 }
-                configuration["quality"] = value(parent_node, "tt:Quality")
-                configuration["rate_control"] = {
+                configuration[:quality] = value(parent_node, "tt:Quality")
+                configuration[:rate_control] = {
                     frame_rate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:FrameRateLimit"),
                     encoding_interval: value(_get_node(parent_node, "tt:RateControl"), "tt:EncodingInterval"),
                     bitrate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:BitrateLimit")
                 }
                 unless parent_node.at_xpath('//tt:MPEG4').nil?
-                    configuration["MPEG4"] = {
+                    configuration[:MPEG4] = {
                         gov_length:  value(_get_node(parent_node, "tt:MPEG4"), "tt:GovLength"),
                         mpeg4_profile:  value(_get_node(parent_node, "tt:MPEG4"), "tt:Mpeg4Profile")
                     }
                 end
                 unless parent_node.at_xpath('//tt:H264').nil?
-                    configuration["H264"] = {
+                    configuration[:H264] = {
                         gov_length:  value(_get_node(parent_node, "tt:H264"), "tt:GovLength"),
                         h264_profile:  value(_get_node(parent_node, "tt:H264"), "tt:H264Profile")
                     }
                 end
-                configuration["multicast"] = _get_multicast(parent_node)
-                configuration["session_timeout"] = value(parent_node, "tt:SessionTimeout")
+                configuration[:multicast] = _get_multicast(parent_node)
+                configuration[:session_timeout] = value(parent_node, "tt:SessionTimeout")
                 return configuration
             end
 
             def _get_audio_encoder_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["encoding"] = value(parent_node, "tt:Encoding")
-                configuration["bitrate"] = value(parent_node, "tt:Bitrate")
-                configuration["sample_rate"] = value(parent_node, "tt:SampleRate")
-                configuration["multicast"] = _get_multicast(parent_node)
-                configuration["session_timeout"] = value(parent_node, "tt:SessionTimeout")
+                configuration[:encoding] = value(parent_node, "tt:Encoding")
+                configuration[:bitrate] = value(parent_node, "tt:Bitrate")
+                configuration[:sample_rate] = value(parent_node, "tt:SampleRate")
+                configuration[:multicast] = _get_multicast(parent_node)
+                configuration[:session_timeout] = value(parent_node, "tt:SessionTimeout")
                 return configuration
             end
 
@@ -148,11 +148,11 @@ module ONVIF
                         parameters: _get_parameters(node)
                     }
                 end
-                configuration["analytics_engine_configuration"] = {
+                configuration[:analytics_engine_configuration] = {
                     analytics_module: analytics_module,
                     extension: ""
                 }
-                configuration["rule_engine_configuration"] = {
+                configuration[:rule_engine_configuration] = {
                     rule: rule,
                     extension: ""
                 }
@@ -161,16 +161,16 @@ module ONVIF
 
             def _get_ptz_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["node_token"] = value(parent_node, "tt:NodeToken")
-                configuration["default_absolute_pant_tilt_position_space"] = value(parent_node, "tt:DefaultAbsolutePantTiltPositionSpace")
-                configuration["default_absolute_zoom_position_space"] = value(parent_node, "tt:DefaultAbsoluteZoomPositionSpace")
-                configuration["default_relative_pan_tilt_translation_space"] = value(parent_node, "tt:DefaultRelativePanTiltTranslationSpace")
-                configuration["default_relative_zoom_translation_space"] = value(parent_node, "tt:DefaultRelativeZoomTranslationSpace")
-                configuration["default_continuous_pan_tilt_velocity_space"] = value(parent_node, "tt:DefaultContinuousPanTiltVelocitySpace")
-                configuration["default_continuous_zoom_velocity_space"] = value(parent_node, "tt:DefaultContinuousZoomVelocitySpace")
+                configuration[:node_token] = value(parent_node, "tt:NodeToken")
+                configuration[:default_absolute_pant_tilt_position_space] = value(parent_node, "tt:DefaultAbsolutePantTiltPositionSpace")
+                configuration[:default_absolute_zoom_position_space] = value(parent_node, "tt:DefaultAbsoluteZoomPositionSpace")
+                configuration[:default_relative_pan_tilt_translation_space] = value(parent_node, "tt:DefaultRelativePanTiltTranslationSpace")
+                configuration[:default_relative_zoom_translation_space] = value(parent_node, "tt:DefaultRelativeZoomTranslationSpace")
+                configuration[:default_continuous_pan_tilt_velocity_space] = value(parent_node, "tt:DefaultContinuousPanTiltVelocitySpace")
+                configuration[:default_continuous_zoom_velocity_space] = value(parent_node, "tt:DefaultContinuousZoomVelocitySpace")
                 pan_tilt = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:PanTilt")
                 zoom = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:Zoom")
-                configuration["default_ptz_speed"] = {
+                configuration[:default_ptz_speed] = {
                     pan_tilt:{
                         x: attribute(pan_tilt, "x"),
                         y: attribute(pan_tilt, "y"),
@@ -181,37 +181,37 @@ module ONVIF
                         space: attribute(zoom, "space")
                     }
                 }
-                configuration["fefault_ptz_timeout"] = value(parent_node, "tt:DefaultPTZTimeout")
-                configuration["pan_tilt_limits"] = {
+                configuration[:fefault_ptz_timeout] = value(parent_node, "tt:DefaultPTZTimeout")
+                configuration[:pan_tilt_limits] = {
                     range: {
                         uri: value(_get_node(parent_node, "tt:PanTiltLimits//tt:Range"), "tt:URI"),
                         x_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:XRange"),
                         y_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:YRange")
                     }
                 }
-                configuration["zoom_limits"] = {
+                configuration[:zoom_limits] = {
                     range: {
                         uri: value(_get_node(parent_node, "tt:PanTiltLimits//tt:Range"), "tt:URI"),
                         x_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:XRange"),
                     }
                 }
-                configuration["extension"] = ""
+                configuration[:extension] = ""
                 return configuration
             end
 
             def _get_metadata_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration["ptz_status"] = {
+                configuration[:ptz_status] = {
                     status: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Status"),
                     sosition: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Position")
                 }
-                configuration["events"] = {
+                configuration[:events] = {
                     filter: value(_get_node(parent_node, "tt:Events"), "tt:Filter"),
                     subscription_policy: value(_get_node(parent_node, "tt:Events"), "tt:SubscriptionPolicy")
                 }
-                configuration["analytics"] = value(parent_node, "tt:Analytics")
-                configuration["multicast"] = _get_multicast(parent_node)
-                configuration["session_timeout"] = value(parent_node, "tt:SessionTimeout")
+                configuration[:analytics] = value(parent_node, "tt:Analytics")
+                configuration[:multicast] = _get_multicast(parent_node)
+                configuration[:session_timeout] = value(parent_node, "tt:SessionTimeout")
                 unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").nil?
                     analytics_module = []
                     parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
@@ -221,12 +221,12 @@ module ONVIF
                             parameters: _get_parameters(node)
                         }
                     end
-                    configuration["analytics_engine_configuration"] = {
+                    configuration[:analytics_engine_configuration] = {
                         analytics_module: analytics_module,
                         extension: ""
                     }
                 end
-                configuration["extension"] = ""
+                configuration[:extension] = ""
                 return configuration
             end
 

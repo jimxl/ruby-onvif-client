@@ -12,8 +12,8 @@ module ONVIF
                 message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetVideoEncoderConfigurationOptions) do
-                        xml.wsdl :ConfigurationToken, options["c_token"]
-                        xml.wsdl :ProfileToken, options["p_token"]
+                        xml.wsdl :ConfigurationToken, options[:c_token]
+                        xml.wsdl :ProfileToken, options[:p_token]
                     end
                 end
                 send_message message do |success, result|
@@ -29,7 +29,7 @@ module ONVIF
                             extension: ""
                         }
                         unless xml_doc.at_xpath('//tt:MPEG4').nil?
-                            options["mpeg4"] = {
+                            options[:mpeg4] = {
                                 resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:MPEG4"), "//tt:ResolutionsAvailable"),
                                 gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:GovLengthRange"),
                                 frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:MPEG4"), "//tt:FrameRateRange"),
@@ -38,7 +38,7 @@ module ONVIF
                             }
                         end
                         unless xml_doc.at_xpath('//tt:H264').nil?
-                            options["h264"] = {
+                            options[:h264] = {
                                 resolutions_available: _get_each_val(_get_node(xml_doc, "//tt:H264"), "//tt:ResolutionsAvailable"),
                                 gov_length_range: _get_min_max(_get_node(xml_doc, "//tt:H264"), "//tt:GovLengthRange"),
                                 frame_rate_range: _get_min_max(_get_node(xml_doc, "//tt:H264"), "//tt:FrameRateRange"),

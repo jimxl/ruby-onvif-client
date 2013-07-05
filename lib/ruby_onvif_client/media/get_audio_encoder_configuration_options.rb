@@ -12,8 +12,8 @@ module ONVIF
                 message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetAudioEncoderConfigurationOptions) do
-                        xml.wsdl :ConfigurationToken, options["c_token"]
-                        xml.wsdl :ProfileToken, options["p_token"]
+                        xml.wsdl :ConfigurationToken, options[:c_token]
+                        xml.wsdl :ProfileToken, options[:p_token]
                     end
                 end
                 send_message message do |success, result|
@@ -30,7 +30,7 @@ module ONVIF
                                         items: item.content
                                     }
                                 end
-                                this_options["bitrate_list"] = bitrate_list
+                                this_options[:bitrate_list] = bitrate_list
                             end
                             sample_rate = node.at_xpath("tt:SampleRateList")
                             unless sample_rate.nil?
@@ -40,7 +40,7 @@ module ONVIF
                                         items: item.content
                                     }
                                 end
-                                this_options["sample_rate_list"] = sample_rate_list
+                                this_options[:sample_rate_list] = sample_rate_list
                             end
 
 
