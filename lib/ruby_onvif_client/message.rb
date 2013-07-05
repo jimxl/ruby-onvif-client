@@ -5,6 +5,7 @@ require "akami"
 module ONVIF
     class Message
         attr_writer :body
+        attr_accessor :username, :password
 
         def initialize options = {}
             @options = {
@@ -17,11 +18,13 @@ module ONVIF
                 :'xmlns:soap' => "http://www.w3.org/2003/05/soap-envelope",
                 :'xmlns:wsdl' => "http://www.onvif.org/ver10/device/wsdl"
             }.merge(@options[:namespaces])
+            self.username = @options[:username]
+            self.password = @options[:password]
         end
 
         def header
             wsse = Akami.wsse
-            wsse.credentials(@options[:username], @options[:password])
+            wsse.credentials(username, password)
             wsse.created_at = Time.now
             wsse.to_xml
         end

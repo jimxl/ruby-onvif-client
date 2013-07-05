@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    ruby_onvif_client (0.0.2)
+    ruby_onvif_client (0.0.4)
       activesupport
       akami
       em-http-request

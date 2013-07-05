@@ -2,11 +2,15 @@ require_relative 'message'
 
 module ONVIF
     class Action
-        def initialize client
+        def initialize client, username, password
             @client = client
+            @username = username
+            @password = password
         end
         
         def send_message message
+            message.username = @username
+            message.password = @password
             @client.send message.to_s do |success, result|
                 yield success, result
             end

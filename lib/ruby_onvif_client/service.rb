@@ -3,10 +3,12 @@ require "active_support/all"
 
 module ONVIF
     class Service
-        def initialize address
+        def initialize address, username = 'admin', password = 'admin'
             @client = ONVIF::Client.new(
                 address: address
             )
+            @username = username
+            @password = password
         end
 
         def method_missing(m, *args, &blcok)
@@ -14,7 +16,7 @@ module ONVIF
             unless action_class.nil?
                 self.class.class_exec do
                     define_method m do |*r|
-                        action_class.new(@client).run(*r)
+                        action_class.new(@client, @username, @password).run(*r)
                     end
                 end
                 self.send m, *args
