@@ -3,8 +3,7 @@ require_relative '../action'
 module ONVIF
     module PtzAction
         class GetNodes < Action
-            # node_token 的结构 //[ReferenceToken] Token of the requested PTZNode.
-            def run node_token ,cb
+            def run cb
                 message = create_ptz_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetNodes)
@@ -13,7 +12,7 @@ module ONVIF
                     if success
                         xml_doc = Nokogiri::XML(result[:content])
                         # ???
-                        callback cb, success, preset_token
+                        callback cb, success, result
                     else
                         callback cb, success, result
                     end
