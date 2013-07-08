@@ -51,13 +51,13 @@ module ONVIF
             end
 
             def _get_device xml_device
-                network_keys = [:IPFilter", "ZeroConfiguration", "IPVersion6", "DynDNS", "Dot11Configuration", 
-                    "Dot1XConfigurations", "HostnameFromDHCP", "NTP", "DHCPv6]
-                system_keys = [:DiscoveryResolve", "DiscoveryBye", "RemoteDiscovery", "SystemBackup", "SystemLogging",
-                    "FirmwareUpgrade", "HttpFirmwareUpgrade", "HttpSystemBackup", "HttpSystemLogging", "HttpSupportInformation]
-                security_keys = [:TLS1.0", "TLS1.1", "TLS1.2", "OnboardKeyGeneration", "AccessPolicyConfig", 
+                network_keys = ["IPFilter", "ZeroConfiguration", "IPVersion6", "DynDNS", "Dot11Configuration", 
+                    "Dot1XConfigurations", "HostnameFromDHCP", "NTP", "DHCPv6"]
+                system_keys = ["DiscoveryResolve", "DiscoveryBye", "RemoteDiscovery", "SystemBackup", "SystemLogging",
+                    "FirmwareUpgrade", "HttpFirmwareUpgrade", "HttpSystemBackup", "HttpSystemLogging", "HttpSupportInformation"]
+                security_keys = ["TLS1.0", "TLS1.1", "TLS1.2", "OnboardKeyGeneration", "AccessPolicyConfig", 
                     "DefaultAccessPolicy", "Dot1X", "RemoteUserHandling", "X.509Token", "SAMLToken", "KerberosToken", 
-                    "UsernameToken", "HttpDigest", "RELToken", "SupportedEAPMethods]
+                    "UsernameToken", "HttpDigest", "RELToken", "SupportedEAPMethods"]
                 network = {}; system = {}; security = {}
                 network_keys.each do |key|
                     network[key.underscore] = value(xml_device, '//tt:' + key) unless value(xml_device, '//tt:' + key) == ''
