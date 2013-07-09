@@ -1,7 +1,7 @@
 require_relative '../action'
 
 module ONVIF
-    module MediaAction
+    module PtzAction
         class ContinuousMove < Action
             # options 的结构  
             # {

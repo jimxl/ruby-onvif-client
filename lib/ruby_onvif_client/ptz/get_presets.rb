@@ -1,8 +1,10 @@
 require_relative '../action'
+require_relative '../helper/ptz_common'
 
 module ONVIF
-    module MediaAction
+    module PtzAction
         class GetPresets < Action
+            include PtzCommon  #get_speed()
             # p_token 的结构  
             # p_token = "xxxxx" //[ReferenceToken] A reference to the MediaProfile where the operation should take place.
             def run p_token, cb
@@ -17,26 +19,11 @@ module ONVIF
                         xml_doc = Nokogiri::XML(result[:content])
                         presets = []
                         xml_doc.xpath('//tptz:Preset').each do |node|
-                            ptz_position = node.at_xpath("tt:PTZPosition")
-                            pan_tilt = ptz_position.at_xpath("tt:PanTilt") unless ptz_position.nil?
-                            zoom = ptz_position.at_xpath("tt:Zoom") unless ptz_position.nil?
                             preset = {
                                 name: value(node, 'tt:Name'),
                                 token: attribute(node, "token")
                             }
-                            unless ptz_position.nil?
-                                preset[:ptz_position] ={
-                                    pan_tilt: {
-                                        x: attribute(pan_tilt, "x"),
-                                        y: attribute(pan_tilt, "y"),
-                                        space: attribute(pan_tilt, "space")
-                                    },
-                                    zoom: {
-                                        x: attribute(zoom, "x"),
-                                        space: attribute(zoom, "space")
-                                    }
-                                }
-                            end
+                            preset = get_speed node, "PTZPosition", preset
                             presets << preset
                         end
                         callback cb, success, presets
