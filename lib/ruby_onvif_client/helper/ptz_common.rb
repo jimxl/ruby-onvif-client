@@ -26,6 +26,52 @@ module ONVIF
             return configuration
         end
 
+        def get_space_muster root_doc, parent_node_name, configuration 
+            configuration = {} if configuration.nil?
+            configuration[parent_node_name.underscore] = {}
+            spaces = root_doc.xpath("tt:" + parent_node_name)
+            unless spaces.at_xpath("tt:AbsolutePanTiltPositionSpace").nil?
+                configuration[parent_node_name.underscore][:aptps] = get_spaces spaces, "AbsolutePanTiltPositionSpace"    
+            end
+            unless spaces.at_xpath("tt:AbsoluteZoomPositionSpace").nil?
+                configuration[parent_node_name.underscore][:azps] = get_spaces spaces, "AbsoluteZoomPositionSpace"
+            end
+            unless spaces.at_xpath("tt:RelativePanTiltTranslationSpace").nil?
+                configuration[parent_node_name.underscore][:rptts] = get_spaces spaces, "RelativePanTiltTranslationSpace"
+            end
+            unless spaces.at_xpath("tt:RelativeZoomTranslationSpace").nil?
+                configuration[parent_node_name.underscore][:rzts] = get_spaces spaces, "RelativeZoomTranslationSpace"
+            end
+            unless spaces.at_xpath("tt:ContinuousPanTiltVelocitySpace").nil?
+                configuration[parent_node_name.underscore][:cptvs] = get_spaces spaces, "ContinuousPanTiltVelocitySpace"
+            end
+            unless spaces.at_xpath("tt:ContinuousZoomVelocitySpace").nil?
+                configuration[parent_node_name.underscore][:czvs] = get_spaces spaces, "ContinuousZoomVelocitySpace"
+            end
+            unless spaces.at_xpath("tt:PanTiltSpeedSpace").nil?
+                configuration[parent_node_name.underscore][:ptss] = get_spaces spaces, "PanTiltSpeedSpace"
+            end
+            unless spaces.at_xpath("tt:ZoomSpeedSpace").nil?
+                configuration[parent_node_name.underscore][:zss] = get_spaces spaces, "ZoomSpeedSpace"
+            end
+            configuration[parent_node_name.underscore][:extension] = ""
+            return configuration
+        end
+
+        def get_spaces xml_doc, node_name
+            results = []
+            unless xml_doc.at_xpath("tt:" + node_name).nil?
+                xml_doc.xpath("tt:" + node_name).each do |space|
+                    if space.at_xpath("tt:YRange").nil?
+                        results << get_zoom_limits(space)
+                    else
+                        results << get_pan_tilt_limits(space)
+                    end
+                end
+            end
+            return results
+        end
+
         def get_speed xml_doc, speed_name, configuration
             configuration = {} if configuration.nil?
             speed_doc = xml_doc.at_xpath("tt:" + speed_name)
