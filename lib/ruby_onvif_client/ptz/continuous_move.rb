@@ -24,21 +24,21 @@ module ONVIF
             #     timeout: '' //optional [duration]
             # }
             def run options, cb
-                message = create_ptz_onvif_message
+                message = create_ptz_onvif_message namespaces: {:'xmlns:sch' => 'http://www.onvif.org/ver10/schema'}
                 message.body =  ->(xml) do
                     xml.wsdl(:ContinuousMove) do
                         xml.wsdl :ProfileToken, options[:profile_token]
                         unless options[:velocity].nil?
                             xml.wsdl(:Velocity) do
                                 unless options[:velocity][:pan_tilt].nil?
-                                    xml.wsdl :PanTilt, {
+                                    xml.sch :PanTilt, {
                                         "x" => options[:velocity][:pan_tilt][:x],
                                         "y" => options[:velocity][:pan_tilt][:y],
                                         "space" => options[:velocity][:pan_tilt][:space]
                                     }
                                 end
                                 unless options[:velocity][:zoom].nil?
-                                    xml.wsdl :Zoom, {
+                                    xml.sch :Zoom, {
                                         "x" => options[:velocity][:zoom][:x],
                                         "space" => options[:velocity][:zoom][:space]
                                     }
