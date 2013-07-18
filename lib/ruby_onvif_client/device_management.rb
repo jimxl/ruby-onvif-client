@@ -1,6 +1,6 @@
 require_relative 'service'
 Dir.chdir __dir__ do
-    require_dir 'device_management'
+    require_relative_dir 'device_management'
 end
 
 module ONVIF

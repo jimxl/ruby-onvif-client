@@ -1,6 +1,6 @@
 require_relative 'service'
 Dir.chdir __dir__ do
-    require_dir 'ptz'
+    require_relative_dir 'ptz'
 end
 
 module ONVIF
