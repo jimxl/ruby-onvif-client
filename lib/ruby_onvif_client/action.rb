@@ -39,9 +39,18 @@ module ONVIF
             options[:namespaces] = namespaces
             Message.new options
         end
+
         def create_ptz_onvif_message options = {}
             namespaces = {
                 :'xmlns:wsdl' => "http://www.onvif.org/ver20/ptz/wsdl"
+            }.merge(options[:namespaces] || {})
+            options[:namespaces] = namespaces
+            Message.new options
+        end
+
+        def create_event_onvif_message options = {}
+            namespaces = {
+                :'xmlns:wsdl' => "http://www.onvif.org/ver10/events/wsdl"
             }.merge(options[:namespaces] || {})
             options[:namespaces] = namespaces
             Message.new options
