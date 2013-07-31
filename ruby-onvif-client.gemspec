@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
     s.required_ruby_version = Gem::Requirement.new(">= 1.9.3")
     s.add_dependency 'em_ws_discovery'
     s.add_dependency 'em-http-request'
+    s.add_dependency 'em-http-server'
     s.add_dependency 'activesupport'
     s.add_dependency 'akami'
 end
