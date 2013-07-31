@@ -2,7 +2,7 @@ require_relative '../action'
 
 module ONVIF
     module PtzAction
-        class GotoHomePosition < Action
+        class RelativeMove < Action
             # options 的结构  
             # {
             #     profile_token: "xxxxxxx",//[ReferenceToken] A reference to the MediaProfile where the operation should take place.
@@ -40,7 +40,7 @@ module ONVIF
             def run options, cb
                 message = create_ptz_onvif_message
                 message.body =  ->(xml) do
-                    xml.wsdl(:GotoHomePosition) do
+                    xml.wsdl(:RelativeMove) do
                         xml.wsdl :ProfileToken, options[:profile_token]
                         xml.wsdl(:Translation) do
                             unless options[:translation][:pan_tilt].nil?
