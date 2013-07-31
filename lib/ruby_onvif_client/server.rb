@@ -6,6 +6,10 @@ module ONVIF
       # def post_init
       #     super
       # end
+      def initialize call_back
+          @call_back = call_back
+          super
+      end
 
       def process_http_request
           puts "############################ #{__LINE__}"
@@ -38,12 +42,13 @@ module ONVIF
           puts "############################ #{__LINE__}"
           puts @http_bodys
 
-          parse_data @http_content
+          result = parse_data @http_content
           # response = EM::DelegatedHttpResponse.new(self)
           # response.status = 200
           # response.content_type 'text/html'
           # response.content = 'It works'
           # response.send_response
+          @call_back.call result
       end
 
       def http_request_errback e
