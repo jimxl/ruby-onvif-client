@@ -73,7 +73,12 @@ module ONVIF
               event_data[:value] = node.xpath('tt:SimpleItem').attribute('Value').value
           end
           res[:data] = event_data
+          res[:host] = @http[:host] + @http_request_uri
           puts res
+          # {:topic=>"tns1:VideoAnalytics/tnsn:MotionDetection", 
+          #  :time=>"2013-08-01T17:01:33", 
+          #  :source=>{:name=>"VideoSourceConfigurationToken", :value=>"profile_VideoSource_1"}, 
+          #  :data=>{:name=>"MotionActive", :value=>"true"}, :host=>"192.168.16.251:8080/onvif_notify_server"}
           res
       end
   end
