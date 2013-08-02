@@ -6,6 +6,10 @@ module ONVIF
       # def post_init
       #     super
       # end
+      def initialize call_back
+          @call_back = call_back
+          super
+      end
 
       def process_http_request
           puts "############################ #{__LINE__}"
@@ -38,12 +42,13 @@ module ONVIF
           puts "############################ #{__LINE__}"
           puts @http_bodys
 
-          parse_data @http_content
+          result = parse_data @http_content
           # response = EM::DelegatedHttpResponse.new(self)
           # response.status = 200
           # response.content_type 'text/html'
           # response.content = 'It works'
           # response.send_response
+          @call_back.call result
       end
 
       def http_request_errback e
@@ -68,7 +73,12 @@ module ONVIF
               event_data[:value] = node.xpath('tt:SimpleItem').attribute('Value').value
           end
           res[:data] = event_data
+          res[:host] = @http[:host] + @http_request_uri
           puts res
+          # {:topic=>"tns1:VideoAnalytics/tnsn:MotionDetection", 
+          #  :time=>"2013-08-01T17:01:33", 
+          #  :source=>{:name=>"VideoSourceConfigurationToken", :value=>"profile_VideoSource_1"}, 
+          #  :data=>{:name=>"MotionActive", :value=>"true"}, :host=>"192.168.16.251:8080/onvif_notify_server"}
           res
       end
   end

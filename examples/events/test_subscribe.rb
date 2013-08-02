@@ -1,7 +1,17 @@
 require_relative "../../lib/ruby_onvif_client"
 require_relative "../../lib/ruby_onvif_client/server.rb"
 EM.run do
-	EM::start_server("0.0.0.0", 8080, ONVIF::Server)
+	cb = ->(res) {
+		puts "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",res
+	}
+	EM::start_server("0.0.0.0", 8080, ONVIF::Server, cb) do |conn|
+		conn.instance_eval do
+			# conn.process_http_request -> {
+			# 	puts "mmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
+			# }
+			puts "lllllllllllllllllll",@http_content,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
+		end
+	end
     event = ONVIF::Event.new("http://192.168.16.106/onvif/event_service")
     event.get_event_service_address ->(address) {
         puts "address=",address
@@ -16,3 +26,21 @@ EM.run do
     }    
    
 end
+
+  # <SOAP-ENV:Body>
+  #   <wsnt:Notify>
+  #     <wsnt:NotificationMessage>
+  #       <wsnt:Topic Dialect="http://www.onvif.org/ver10/tev/topicExpression/ConcreteSet">tns1:VideoAnalytics/tnsn:MotionDetection</wsnt:Topic>
+  #       <wsnt:Message>
+  #         <tt:Message UtcTime="2013-07-25T16:44:01">
+  #           <tt:Source>
+  #             <tt:SimpleItem Name="VideoSourceConfigurationToken" Value="profile_VideoSource_1"/>
+  #           </tt:Source>
+  #           <tt:Data>
+  #             <tt:SimpleItem Name="MotionActive" Value="true"/>
+  #           </tt:Data>
+  #         </tt:Message>
+  #       </wsnt:Message>
+  #     </wsnt:NotificationMessage>
+  #   </wsnt:Notify>
+  # </SOAP-ENV:Body>
