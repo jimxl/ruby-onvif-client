@@ -12,7 +12,6 @@ module ONVIF
                     end
                 end
                 send_message message do |success, result|
-                    #????
                     callback cb, success, result
                 end
             end
