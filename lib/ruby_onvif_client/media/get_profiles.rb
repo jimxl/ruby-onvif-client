@@ -31,7 +31,7 @@ module ONVIF
                             success_result[:video_encoder_configuration] = _get_video_encoder_configuration(video_encoder) unless video_encoder.nil?
                             success_result[:audio_encoder_configuration] = _get_audio_encoder_configuration(audio_encoder) unless audio_encoder.nil?
                             success_result[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
-                            success_result[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
+                            #success_result[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
                             success_result[:metadata_configuration] = _get_metadata_configuration(metadata) unless metadata.nil?
                             profiles << success_result
                         end
