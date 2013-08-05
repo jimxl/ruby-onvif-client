@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
     s.name        = 'ruby_onvif_client'
-    s.version     = '0.1.2'
+    s.version     = '0.1.3'
     s.date        = '2013-08-05'
     s.summary     = "Ruby实现的onvif客户端"
     s.description = "使用ruby实现的简单的onvif客户端"
