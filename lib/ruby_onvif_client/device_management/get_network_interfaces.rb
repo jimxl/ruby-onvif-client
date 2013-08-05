@@ -46,7 +46,7 @@ module ONVIF
                 admin_xml_doc = xml_link.at_xpath('tt:AdminSettings')
                 oper_xml_doc = xml_link.at_xpath('tt:OperSettings')
                 link = {}
-                unless xml_doc.nil?
+                unless admin_xml_doc.nil?
                     link[:admin_settings] = {
                         auto_negotiation: value(admin_xml_doc, "tt:AutoNegotiation"),
                         speed: value(admin_xml_doc, "tt:Speed"),
