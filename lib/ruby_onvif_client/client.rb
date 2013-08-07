@@ -16,7 +16,7 @@ module ONVIF
                 connect_timeout: @options[:connect_timeout]
             }
             request_options = {
-                body: data,
+                body: data
             }
             http = EventMachine::HttpRequest.new(
                 @options[:address], 

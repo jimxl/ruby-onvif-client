@@ -34,7 +34,7 @@ module ONVIF
                         profile[:audio_source_configuration] = _get_audio_source_configuration(audio_source) unless audio_source.nil?
                         profile[:video_encoder_configuration] = _get_video_encoder_configuration(video_encoder) unless video_encoder.nil?
                         profile[:audio_encoder_configuration] = _get_audio_encoder_configuration(audio_encoder) unless audio_encoder.nil?
-                        profile[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
+                        #profile[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
                         #profile[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
                         profile[:metadata_configuration] = _get_metadata_configuration(metadata) unless metadata.nil?
                         callback cb, success, profile
