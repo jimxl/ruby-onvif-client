@@ -44,9 +44,9 @@ module ONVIF
 
             def _get_analytics xml_analytics
                 {
-                    x_addr: value(xml_analytics, '//tt:XAddr'),
-                    rule_support: value(xml_analytics, '//tt:RuleSupport'),
-                    ams: value(xml_analytics, '//tt:AnalyticsModuleSupport')
+                    x_addr: value(xml_analytics, 'tt:XAddr'),
+                    rule_support: value(xml_analytics, 'tt:RuleSupport'),
+                    ams: value(xml_analytics, 'tt:AnalyticsModuleSupport')
                 }
             end
 
@@ -60,21 +60,21 @@ module ONVIF
                     "UsernameToken", "HttpDigest", "RELToken", "SupportedEAPMethods"]
                 network = {}; system = {}; security = {}
                 network_keys.each do |key|
-                    network[key.underscore] = value(xml_device, '//tt:' + key) unless value(xml_device, '//tt:' + key) == ''
+                    network[key.underscore] = value(xml_device, 'tt:Network/tt:' + key) unless value(xml_device, 'tt:Network/tt:' + key) == ''
                 end
                 system_keys.each do |key|
-                    system[key.underscore] = value(xml_device, '//tt:' + key) unless value(xml_device, '//tt:' + key) == ''
+                    system[key.underscore] = value(xml_device, 'tt:System/tt:' + key) unless value(xml_device, 'tt:System/tt:' + key) == ''
                 end
                 security_keys.each do |key|
-                    security[key.underscore] = value(xml_device, '//tt:' + key) unless value(xml_device, '//tt:' + key) == ''
+                    security[key.underscore] = value(xml_device, 'tt:Security/tt:' + key) unless value(xml_device, 'tt:Security/tt:' + key) == ''
                 end
                 return {
-                    x_addr: value(xml_device, '//tt:XAddr'),
+                    x_addr: value(xml_device, 'tt:XAddr'),
                     network: network,
                     system: system,
                     io: {
-                        input_connectors: value(xml_device, '//tt:InputConnectors'),
-                        relay_outputs: value(xml_device, '//tt:RelayOutputs'),
+                        input_connectors: value(xml_device, 'tt:IO/tt:InputConnectors'),
+                        relay_outputs: value(xml_device, 'tt:IO/tt:RelayOutputs'),
                         extension: ""
                     },
                     security: security
@@ -83,26 +83,26 @@ module ONVIF
 
             def _get_events xml_events
                 {
-                    x_addr: value(xml_events, '//tt:XAddr'),
-                    wssubscription_policy_support: value(xml_events, '//tt:WSSubscriptionPolicySupport'),
-                    wspull_point_support: value(xml_events, '//tt:WSPullPointSupport'),
-                    wspsmis: value(xml_events, '//tt:WSPausableSubscriptionManagerInterfaceSupport')
+                    x_addr: value(xml_events, 'tt:XAddr'),
+                    wssubscription_policy_support: value(xml_events, 'tt:WSSubscriptionPolicySupport'),
+                    wspull_point_support: value(xml_events, 'tt:WSPullPointSupport'),
+                    wspsmis: value(xml_events, 'tt:WSPausableSubscriptionManagerInterfaceSupport')
                 }
             end
 
             def _get_imaging xml_imaging
                 {
-                    x_addr: value(xml_imaging, '//tt:XAddr')
+                    x_addr: value(xml_imaging, 'tt:XAddr')
                 }
             end
 
             def _get_media xml_media
                 {
-                    x_addr: value(xml_media, '//tt:XAddr'),
+                    x_addr: value(xml_media, 'tt:XAddr'),
                     streaming_capabilities: {
-                        rtp_multicast: value(xml_media, '//tt:RTPMulticast'),
-                        rtp_tcp: value(xml_media, '//tt:RTPMulticast'),
-                        rtp_rtsp_tcp: value(xml_media, '//tt:RTP_RTSP_TCP'),
+                        rtp_multicast: value(xml_media, 'tt:StreamingCapabilities/tt:RTPMulticast'),
+                        rtp_tcp: value(xml_media, 'tt:StreamingCapabilities/tt:RTPMulticast'),
+                        rtp_rtsp_tcp: value(xml_media, 'tt:StreamingCapabilities/tt:RTP_RTSP_TCP'),
                         extension: ""
                     },
                     extension: ""
@@ -110,7 +110,7 @@ module ONVIF
             end
 
             def _get_ptz xml_ptz
-                {x_addr: value(xml_ptz, '//tt:XAddr')}
+                {x_addr: value(xml_ptz, 'tt:XAddr')}
             end
         end
     end
