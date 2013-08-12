@@ -12,8 +12,8 @@ module ONVIF
                 message = create_media_onvif_message
                 message.body =  ->(xml) do
                     xml.wsdl(:GetAudioEncoderConfigurationOptions) do
-                        xml.wsdl :ConfigurationToken, options[:c_token]
-                        xml.wsdl :ProfileToken, options[:p_token]
+                        xml.wsdl :ConfigurationToken, options[:c_token] unless options[:c_token].nil?
+                        xml.wsdl :ProfileToken, options[:p_token] unless options[:p_token].nil?
                     end
                 end
                 send_message message do |success, result|
