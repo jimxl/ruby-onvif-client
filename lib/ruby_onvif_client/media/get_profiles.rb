@@ -137,7 +137,7 @@ module ONVIF
                 configuration = _get_public_sector(parent_node)
                 analytics_module = []; rule = []
                 unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").nil?
-                    parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
                         analytics_module << {
                             name: attribute(node, "Name"),
                             type: attribute(node, "Type"),
@@ -145,7 +145,7 @@ module ONVIF
                         }
                     end
                 
-                    parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:RuleEngineConfiguration").each do |node|
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:RuleEngineConfiguration").each do |node|
                         rule << {
                             name: attribute(node, "Name"),
                             type: attribute(node, "Type"),
@@ -249,7 +249,7 @@ module ONVIF
 
                 unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration").nil?
                     analytics_module = []
-                    parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
                         analytics_module << {
                             name: attribute(node, "Name"),
                             type: attribute(node, "Type"),
@@ -288,7 +288,7 @@ module ONVIF
                 element_item = []
                 result = {}
                 unless parent_node.at_xpath("tt:SimpleItem").nil?
-                    parent_node.at_xpath("tt:SimpleItem").each do |node|
+                    parent_node.xpath("tt:SimpleItem").each do |node|
                         simple_item << {
                             name: attribute(node, "Name"),
                             value: attribute(node, "Value")
@@ -298,7 +298,7 @@ module ONVIF
                 end
 
                 unless parent_node.at_xpath("tt:ElementItem").nil?
-                    parent_node.at_xpath("tt:ElementItem").each do |node|
+                    parent_node.xpath("tt:ElementItem").each do |node|
                         element_item << {
                             xsd_any: value(node, "tt:xsd:any"),
                             name:  attribute(node, "Name")
