@@ -12,15 +12,20 @@ EM.run do
 			puts "lllllllllllllllllll",@http_content,"kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"
 		end
 	end
-    event = ONVIF::Event.new("http://192.168.16.106/onvif/event_service")
-    event.get_event_service_address ->(address) {
+    get_event_service_address "192.168.16.106", ->(address) {
         puts "address=",address
         content = {}
         content[:address] = 'http://192.168.16.251:8080/onvif_notify_server'
         content[:initial_termination_time] = 'PT10S'
+        event = ONVIF::Event.new(address)
         event.subscribe content, ->(success, result) {
             if success
                 puts "ooooooooooooook", result
+                event.set_synchronization_point ->(success, result) {
+                	if success
+                		puts "set sync point ok", result
+                	end
+                }
             end
         }      
     }    

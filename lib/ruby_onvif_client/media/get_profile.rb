@@ -34,8 +34,8 @@ module ONVIF
                         profile[:audio_source_configuration] = _get_audio_source_configuration(audio_source) unless audio_source.nil?
                         profile[:video_encoder_configuration] = _get_video_encoder_configuration(video_encoder) unless video_encoder.nil?
                         profile[:audio_encoder_configuration] = _get_audio_encoder_configuration(audio_encoder) unless audio_encoder.nil?
-                        #profile[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
-                        #profile[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
+                        profile[:video_analytics_configuration] = _get_video_analytics_configuration(video_analytics) unless video_analytics.nil?
+                        profile[:ptz_configuration] = _get_ptz_configuration(ptz) unless ptz.nil?
                         profile[:metadata_configuration] = _get_metadata_configuration(metadata) unless metadata.nil?
                         callback cb, success, profile
                     else
@@ -101,18 +101,20 @@ module ONVIF
                     height: value(_get_node(parent_node, "tt:Resolution"), "tt:Height")
                 }
                 configuration[:quality] = value(parent_node, "tt:Quality")
-                configuration[:rate_control] = {
-                    frame_rate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:FrameRateLimit"),
-                    encoding_interval: value(_get_node(parent_node, "tt:RateControl"), "tt:EncodingInterval"),
-                    bitrate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:BitrateLimit")
-                }
-                unless parent_node.at_xpath('//tt:MPEG4').nil?
+                unless parent_node.at_xpath('tt:RateControl').nil?
+                    configuration[:rate_control] = {
+                        frame_rate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:FrameRateLimit"),
+                        encoding_interval: value(_get_node(parent_node, "tt:RateControl"), "tt:EncodingInterval"),
+                        bitrate_limit: value(_get_node(parent_node, "tt:RateControl"), "tt:BitrateLimit")
+                    }
+                end
+                unless parent_node.at_xpath('tt:MPEG4').nil?
                     configuration[:MPEG4] = {
                         gov_length:  value(_get_node(parent_node, "tt:MPEG4"), "tt:GovLength"),
                         mpeg4_profile:  value(_get_node(parent_node, "tt:MPEG4"), "tt:Mpeg4Profile")
                     }
                 end
-                unless parent_node.at_xpath('//tt:H264').nil?
+                unless parent_node.at_xpath('tt:H264').nil?
                     configuration[:H264] = {
                         gov_length:  value(_get_node(parent_node, "tt:H264"), "tt:GovLength"),
                         h264_profile:  value(_get_node(parent_node, "tt:H264"), "tt:H264Profile")
@@ -136,19 +138,22 @@ module ONVIF
             def _get_video_analytics_configuration parent_node
                 configuration = _get_public_sector(parent_node)
                 analytics_module = []; rule = []
-                parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
-                    analytics_module << {
-                        name: attribute(node, "Name"),
-                        type: attribute(node, "Type"),
-                        parameters: _get_parameters(node)
-                    }
-                end
-                parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:RuleEngineConfiguration").each do |node|
-                    rule << {
-                        name: attribute(node, "Name"),
-                        type: attribute(node, "Type"),
-                        parameters: _get_parameters(node)
-                    }
+                unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").nil?
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
+                        analytics_module << {
+                            name: attribute(node, "Name"),
+                            type: attribute(node, "Type"),
+                            parameters: _get_parameters(node)
+                        }
+                    end
+                
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:RuleEngineConfiguration").each do |node|
+                        rule << {
+                            name: attribute(node, "Name"),
+                            type: attribute(node, "Type"),
+                            parameters: _get_parameters(node)
+                        }
+                    end
                 end
                 configuration[:analytics_engine_configuration] = {
                     analytics_module: analytics_module,
@@ -164,59 +169,89 @@ module ONVIF
             def _get_ptz_configuration parent_node
                 configuration = _get_public_sector(parent_node)
                 configuration[:node_token] = value(parent_node, "tt:NodeToken")
-                configuration[:default_absolute_pant_tilt_position_space] = value(parent_node, "tt:DefaultAbsolutePantTiltPositionSpace")
-                configuration[:default_absolute_zoom_position_space] = value(parent_node, "tt:DefaultAbsoluteZoomPositionSpace")
-                configuration[:default_relative_pan_tilt_translation_space] = value(parent_node, "tt:DefaultRelativePanTiltTranslationSpace")
-                configuration[:default_relative_zoom_translation_space] = value(parent_node, "tt:DefaultRelativeZoomTranslationSpace")
-                configuration[:default_continuous_pan_tilt_velocity_space] = value(parent_node, "tt:DefaultContinuousPanTiltVelocitySpace")
-                configuration[:default_continuous_zoom_velocity_space] = value(parent_node, "tt:DefaultContinuousZoomVelocitySpace")
-                pan_tilt = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:PanTilt")
-                zoom = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:Zoom")
-                configuration[:default_ptz_speed] = {
-                    pan_tilt:{
-                        x: attribute(pan_tilt, "x"),
-                        y: attribute(pan_tilt, "y"),
-                        space: attribute(pan_tilt, "space")
-                    },
-                    zoom: {
-                        x: attribute(zoom, "x"),
-                        space: attribute(zoom, "space")
+                unless parent_node.at_xpath("tt:DefaultAbsolutePantTiltPositionSpace").nil?
+                    configuration[:default_absolute_pant_tilt_position_space] = value(parent_node, "tt:DefaultAbsolutePantTiltPositionSpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultAbsoluteZoomPositionSpace").nil?
+                    configuration[:default_absolute_zoom_position_space] = value(parent_node, "tt:DefaultAbsoluteZoomPositionSpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultRelativePanTiltTranslationSpace").nil?
+                    configuration[:default_relative_pan_tilt_translation_space] = value(parent_node, "tt:DefaultRelativePanTiltTranslationSpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultRelativeZoomTranslationSpace").nil?
+                    configuration[:default_relative_zoom_translation_space] = value(parent_node, "tt:DefaultRelativeZoomTranslationSpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultContinuousPanTiltVelocitySpace").nil?
+                    configuration[:default_continuous_pan_tilt_velocity_space] = value(parent_node, "tt:DefaultContinuousPanTiltVelocitySpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultContinuousZoomVelocitySpace").nil?
+                    configuration[:default_continuous_zoom_velocity_space] = value(parent_node, "tt:DefaultContinuousZoomVelocitySpace")
+                end
+                unless parent_node.at_xpath("tt:DefaultPTZSpeed").nil?
+                    pan_tilt = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:PanTilt")
+                    zoom = _get_node(parent_node,"//tt:DefaultPTZSpeed//tt:Zoom")
+                    configuration[:default_ptz_speed] = {}
+                    unless pan_tilt.nil?
+                        configuration[:default_ptz_speed][:pan_tilt] = {
+                            x: attribute(pan_tilt, "x"),
+                            y: attribute(pan_tilt, "y"),
+                            space: attribute(pan_tilt, "space")
+                        }
+                    end
+                    unless zoom.nil?
+                        configuration[:default_ptz_speed][:zoom] = {
+                            x: attribute(zoom, "x"),
+                            space: attribute(zoom, "space")
+                        }
+                    end
+                end
+                unless parent_node.at_xpath("tt:DefaultPTZTimeout").nil?
+                    configuration[:fefault_ptz_timeout] = value(parent_node, "tt:DefaultPTZTimeout")
+                end
+                unless parent_node.at_xpath("tt:PanTiltLimits").nil?
+                    configuration[:pan_tilt_limits] = {
+                        range: {
+                            uri: value(_get_node(parent_node, "tt:PanTiltLimits//tt:Range"), "tt:URI"),
+                            x_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:XRange"),
+                            y_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:YRange")
+                        }
                     }
-                }
-                configuration[:fefault_ptz_timeout] = value(parent_node, "tt:DefaultPTZTimeout")
-                configuration[:pan_tilt_limits] = {
-                    range: {
-                        uri: value(_get_node(parent_node, "tt:PanTiltLimits//tt:Range"), "tt:URI"),
-                        x_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:XRange"),
-                        y_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:YRange")
+                end
+                unless parent_node.at_xpath("tt:ZoomLimits").nil?
+                    configuration[:zoom_limits] = {
+                        range: {
+                            uri: value(_get_node(parent_node, "tt:ZoomLimits//tt:Range"), "tt:URI"),
+                            x_range: _get_min_max(_get_node(parent_node,"tt:ZoomLimits//tt:Range"), "tt:XRange"),
+                        }
                     }
-                }
-                configuration[:zoom_limits] = {
-                    range: {
-                        uri: value(_get_node(parent_node, "tt:PanTiltLimits//tt:Range"), "tt:URI"),
-                        x_range: _get_min_max(_get_node(parent_node,"tt:PanTiltLimits//tt:Range"), "tt:XRange"),
-                    }
-                }
+                end
                 configuration[:extension] = ""
                 return configuration
             end
 
             def _get_metadata_configuration parent_node
                 configuration = _get_public_sector(parent_node)
-                configuration[:ptz_status] = {
-                    status: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Status"),
-                    sosition: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Position")
-                }
-                configuration[:events] = {
-                    filter: value(_get_node(parent_node, "tt:Events"), "tt:Filter"),
-                    subscription_policy: value(_get_node(parent_node, "tt:Events"), "tt:SubscriptionPolicy")
-                }
-                configuration[:analytics] = value(parent_node, "tt:Analytics")
+                unless parent_node.at_xpath("tt:PTZStatus").nil?
+                    configuration[:ptz_status] = {
+                        status: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Status"),
+                        sosition: value(_get_node(parent_node, "tt:PTZStatus"), "tt:Position")
+                    }
+                end
+                unless parent_node.at_xpath("tt:Events").nil?
+                    configuration[:events] = {
+                        filter: value(_get_node(parent_node, "tt:Events"), "tt:Filter"),
+                        subscription_policy: value(_get_node(parent_node, "tt:Events"), "tt:SubscriptionPolicy")
+                    }
+                end
+                unless parent_node.at_xpath("tt:Analytics").nil?
+                    configuration[:analytics] = value(parent_node, "tt:Analytics")
+                end
                 configuration[:multicast] = _get_multicast(parent_node)
                 configuration[:session_timeout] = value(parent_node, "tt:SessionTimeout")
-                unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").nil?
+
+                unless parent_node.at_xpath("tt:AnalyticsEngineConfiguration").nil?
                     analytics_module = []
-                    parent_node.at_xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
+                    parent_node.xpath("tt:AnalyticsEngineConfiguration//tt:AnalyticsModule").each do |node|
                         analytics_module << {
                             name: attribute(node, "Name"),
                             type: attribute(node, "Type"),
@@ -233,38 +268,49 @@ module ONVIF
             end
 
             def _get_multicast parent_node
-                {
+                result = {
                     address: {
-                        type: value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:Type'),
-                        ipv4_address: value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:IPv4Address'),
-                        ipv6_address: value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:IPv6Address')
+                        type: value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:Type')
                     },
                     port: value(_get_node(parent_node, "//tt:Multicast"), "tt:Port"),
                     ttl: value(_get_node(parent_node, "//tt:Multicast"), "tt:TTL"),
                     auto_start: value(_get_node(parent_node, "//tt:Multicast"), "tt:AutoStart")
                 }
+                unless parent_node.at_xpath("//tt:Multicast//tt:Address//tt:IPv4Address").nil?
+                    result[:address][:ipv4_address] = value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:IPv4Address')
+                end
+                unless parent_node.at_xpath("//tt:Multicast//tt:Address//tt:IPv6Address").nil?
+                    result[:address][:ipv6_address] = value(_get_node(parent_node, "//tt:Multicast//tt:Address"), '//tt:IPv6Address')
+                end
+                return result
             end
 
             def _get_parameters parent_node
                 simple_item = []
                 element_item = []
-                parent_node.at_xpath("tt:SimpleItem").each do |node|
-                    simple_item << {
-                        name: attribute(node, "Name"),
-                        value: attribute(node, "Value")
-                    }
+                result = {}
+                unless parent_node.at_xpath("tt:SimpleItem").nil?
+                    parent_node.xpath("tt:SimpleItem").each do |node|
+                        simple_item << {
+                            name: attribute(node, "Name"),
+                            value: attribute(node, "Value")
+                        }
+                    end
+                    result[:simple_item] = simple_item
                 end
-                parent_node.at_xpath("tt:ElementItem").each do |node|
-                    element_item << {
-                        xsd_any: value(node, "tt:xsd:any"),
-                        name:  attribute(node, "Name")
-                    }
+
+                unless parent_node.at_xpath("tt:ElementItem").nil?
+                    parent_node.xpath("tt:ElementItem").each do |node|
+                        element_item << {
+                            xsd_any: value(node, "tt:xsd:any"),
+                            name:  attribute(node, "Name")
+                        }
+                    end
+                    result[:element_item] = element_item
                 end
-                return {
-                    simple_item: simple_item,
-                    element_item: element_item,
-                    extension: ""
-                }
+
+                result[:extension] = ""
+                return result
             end
         end
     end

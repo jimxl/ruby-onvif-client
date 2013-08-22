@@ -16,35 +16,22 @@ module ONVIF
                 send_message message do |success, result|
                     if success
                         xml_doc = Nokogiri::XML(result[:content])
-                        xml_doc = Nokogiri::XML(result[:content])
-                        configurations = []
-                        xml_doc.xpath('//trt:Configurations').each do |node|
-                            bounds = node.xpath('tt:Bounds')
-                            multicast = node.xpath('tt:Multicast')
-                            address = multicast.xpath('tt:Address')
-                            configuration = {
-                                name: value(node, 'tt:Name'),
-                                use_count: value(node, 'tt:UseCount'),
-                                token: attribute(node, 'token'),
-                                encoding: value(node, 'tt:Encoding'),
-                                bitrate: value(node, 'tt:Bitrate'),
-                                sample_rate: value(node, 'tt:SampleRate'),
-                                
-                                multicast: {
-                                    address: {
-                                        type: value(address, 'tt:Type'),
-                                        ipv4_address: value(address, 'tt:IPv4Address'),
-                                        ipv6_address: value(address, 'tt:IPv6Address')
-                                    },
-                                    port: value(multicast, "tt:Port"),
-                                    ttl: value(multicast, "tt:TTL"),
-                                    auto_start: value(multicast, "tt:AutoStart")
-                                },
-                                session_timeout: value(node, 'tt:SessionTimeout')
-                            }
-                            configurations << configuration
-                        end
-                        callback cb, success, configurations
+                        parent_node = xml_doc.at_xpath('//trt:Configuration')
+                        bounds = parent_node.at_xpath('tt:Bounds')
+                        configuration = {
+                            name: value(parent_node, 'tt:Name'),
+                            use_count: value(parent_node, 'tt:UseCount'),
+                            token: attribute(parent_node, 'token'),
+                            source_token: value(parent_node, 'tt:SourceToken'),
+                            bounds: {
+                                x: attribute(bounds, "x"),
+                                y: attribute(bounds, "y"),
+                                width: attribute(bounds, "width"),
+                                height: attribute(bounds, "height")
+                            },
+                            extension: ""
+                        }
+                        callback cb, success, configuration
                     else
                         callback cb, success, result
                     end

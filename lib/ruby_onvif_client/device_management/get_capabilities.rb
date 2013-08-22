@@ -26,8 +26,8 @@ module ONVIF
                         xml_device = xml_doc.at_xpath('//tt:Device')
                         xml_events = xml_doc.at_xpath('//tt:Events')
                         xml_imaging = xml_doc.at_xpath('//tt:Imaging')
-                        xml_media = xml_doc.xpath('//tt:Media')
-                        xml_ptz = xml_doc.xpath('//tt:PTZ')
+                        xml_media = xml_doc.at_xpath('//tt:Media')
+                        xml_ptz = xml_doc.at_xpath('//tt:PTZ')
                         success_result = {}
                         success_result[:analytics] = _get_analytics(xml_analytics) unless xml_analytics.nil?
                         success_result[:device] = _get_device(xml_device) unless xml_device.nil?
