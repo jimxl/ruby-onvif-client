@@ -10,7 +10,7 @@ module ONVIF
             #       transport: {
             #           protocol: 'UDP', //'UDP', 'TCP', 'RTSP', 'HTTP'
             #           tunnel:{
-            #               protocol: 'TCP', //'UDP', 'TCP', 'RTSP', 'HTTP'           
+            #               protocol: 'TCP', //'UDP', 'TCP', 'RTSP', 'HTTP'
             #           }
             #       }
             #    }
@@ -21,12 +21,12 @@ module ONVIF
                 message.body =  ->(xml) do
                     xml.wsdl(:GetStreamUri) do
                         xml.wsdl(:StreamSetup) do
-                            xml.sch :Stream, options[:stream_setup][:stream]
+                            xml.sch :StreamType, options[:stream_setup][:stream_type]
                             xml.sch :Transport do
                                 xml.sch :Protocol, options[:stream_setup][:transport][:protocol]
                                 xml.sch :Tunnel do
                                     tunnel = options[:stream_setup][:transport][:tunnel]
-                                    unless tunnel.nil?
+                                    unless tunnel.nil? || tunnel.empty?
                                         xml.sch :Protocol,options[:stream_setup][:transport][:tunnel][:protocol]
                                         xml.sch :Tunnel,options[:stream_setup][:transport][:tunnel][:tunnel]
                                     end
