@@ -24,12 +24,13 @@ module ONVIF
                             xml.sch :StreamType, options[:stream_setup][:stream_type]
                             xml.sch :Transport do
                                 xml.sch :Protocol, options[:stream_setup][:transport][:protocol]
-                                xml.sch :Tunnel do
-                                    tunnel = options[:stream_setup][:transport][:tunnel]
-                                    unless tunnel.nil? || tunnel.empty?
-                                        xml.sch :Protocol,options[:stream_setup][:transport][:tunnel][:protocol]
-                                        xml.sch :Tunnel,options[:stream_setup][:transport][:tunnel][:tunnel]
-                                    end
+
+                                tunnel = options[:stream_setup][:transport][:tunnel]
+                                unless tunnel.nil? || tunnel.empty?
+                                  xml.sch :Tunnel do
+                                    xml.sch :Protocol, options[:stream_setup][:transport][:tunnel][:protocol]
+                                    xml.sch :Tunnel, options[:stream_setup][:transport][:tunnel][:tunnel]
+                                  end
                                 end
                             end
                         end
